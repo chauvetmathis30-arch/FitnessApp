@@ -2,7 +2,6 @@
 // FitnessApp — logique principale
 // ============================================================
 
-const STORAGE_KEY = "fitnessapp_v1";
 const DAYS = Object.keys(PROGRAM);
 const DAY_NAMES_FR = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
@@ -14,11 +13,18 @@ const defaultState = {
   prs: {}             // { exerciseName: { weight, reps, date } }
 };
 
-let state = loadState();
+// Clé de stockage par utilisateur (définie après login dans auth.js)
+function storageKey() {
+  const user = window.__currentUser;
+  if (!user) throw new Error("No user session");
+  return "fitnessapp_data_" + user;
+}
+
+let state = structuredClone(defaultState);
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey());
     if (!raw) return structuredClone(defaultState);
     return { ...structuredClone(defaultState), ...JSON.parse(raw) };
   } catch {
@@ -27,7 +33,7 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(storageKey(), JSON.stringify(state));
 }
 
 function todayKey() {
@@ -439,16 +445,17 @@ document.getElementById("profile-form").addEventListener("submit", e => {
 
 document.getElementById("reset-data").addEventListener("click", () => {
   if (confirm("Effacer toutes les données ? Action irréversible.")) {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(storageKey());
     state = loadState();
     initAll();
   }
 });
 
 // ============================================================
-// Init
+// Init — appelée par auth.js après login réussi
 // ============================================================
 function initAll() {
+  state = loadState();
   renderDashboard();
   renderDaySelector();
   renderMealPlan();
@@ -460,4 +467,4 @@ function initAll() {
   renderProfile();
 }
 
-initAll();
+window.initApp = initAll;

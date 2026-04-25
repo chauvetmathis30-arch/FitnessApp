@@ -7,12 +7,48 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Auth screen -->
+  <section id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <h1 class="auth-brand">FitnessApp</h1>
+      <p class="auth-tagline">Connecte-toi pour accéder à ton programme</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login">Connexion</button>
+        <button class="auth-tab" data-auth-tab="signup">Créer un compte</button>
+      </div>
+
+      <form id="login-form" class="auth-form active">
+        <label>Email <input type="email" id="login-email" autocomplete="email" required /></label>
+        <label>Mot de passe <input type="password" id="login-password" autocomplete="current-password" required /></label>
+        <button type="submit" class="primary">Se connecter</button>
+        <p class="auth-error" id="login-error"></p>
+      </form>
+
+      <form id="signup-form" class="auth-form">
+        <label>Email <input type="email" id="signup-email" autocomplete="email" required /></label>
+        <label>Mot de passe (8+ caractères) <input type="password" id="signup-password" autocomplete="new-password" minlength="8" required /></label>
+        <label>Confirmer <input type="password" id="signup-password-confirm" autocomplete="new-password" minlength="8" required /></label>
+        <button type="submit" class="primary">Créer mon compte</button>
+        <p class="auth-error" id="signup-error"></p>
+      </form>
+
+      <p class="auth-note">🔒 Tes données restent stockées localement dans ce navigateur. Mot de passe haché en SHA-256 + sel.</p>
+    </div>
+  </section>
+
+  <!-- App (visible une fois connecté) -->
+  <div id="app-root" hidden>
   <header class="app-header">
     <div class="brand">
       <h1>FitnessApp</h1>
       <p class="tagline">Programme salle + nutrition · objectif athlétique</p>
     </div>
     <div class="user-stats" id="user-stats"></div>
+    <div class="account-bar">
+      <span id="current-user-email"></span>
+      <button id="logout-btn" class="ghost">Déconnexion</button>
+    </div>
   </header>
 
   <nav class="tabs" role="tablist">
@@ -151,8 +187,10 @@
       </div>
     </section>
   </main>
+  </div><!-- /#app-root -->
 
   <script src="data.js"></script>
   <script src="app.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
