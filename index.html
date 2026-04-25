@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitnessApp — Programme & Nutrition</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <h1>FitnessApp</h1>
+      <p class="tagline">Programme salle + nutrition · objectif athlétique</p>
+    </div>
+    <div class="user-stats" id="user-stats"></div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="dashboard">Tableau de bord</button>
+    <button class="tab" data-tab="workout">Entraînement</button>
+    <button class="tab" data-tab="nutrition">Nutrition</button>
+    <button class="tab" data-tab="progress">Progression</button>
+    <button class="tab" data-tab="profile">Profil</button>
+  </nav>
+
+  <main>
+    <!-- Dashboard -->
+    <section class="panel active" id="dashboard">
+      <div class="grid">
+        <div class="card">
+          <h2>Aujourd'hui</h2>
+          <p id="today-date"></p>
+          <p>Séance prévue : <strong id="today-session"></strong></p>
+          <button class="primary" id="goto-workout">Commencer la séance</button>
+        </div>
+        <div class="card">
+          <h2>Apport calorique</h2>
+          <div class="kcal-ring">
+            <span id="kcal-current">0</span> / <span id="kcal-target">2850</span> kcal
+          </div>
+          <div class="macro-bars">
+            <div class="macro"><span>Protéines</span><div class="bar"><div id="bar-prot"></div></div><span id="val-prot">0 / 130 g</span></div>
+            <div class="macro"><span>Glucides</span><div class="bar"><div id="bar-carb"></div></div><span id="val-carb">0 / 380 g</span></div>
+            <div class="macro"><span>Lipides</span><div class="bar"><div id="bar-fat"></div></div><span id="val-fat">0 / 80 g</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Poids actuel</h2>
+          <p class="big-number"><span id="current-weight">65</span> kg</p>
+          <p class="muted">Objectif : prise de masse propre (~+0.3 kg/semaine)</p>
+        </div>
+        <div class="card">
+          <h2>Cette semaine</h2>
+          <p>Séances réalisées : <strong id="weekly-done">0</strong> / 5</p>
+          <p>Streak : <strong id="streak">0</strong> jours</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workout -->
+    <section class="panel" id="workout">
+      <div class="day-selector">
+        <label>Jour :</label>
+        <select id="day-select"></select>
+      </div>
+      <div id="workout-content"></div>
+    </section>
+
+    <!-- Nutrition -->
+    <section class="panel" id="nutrition">
+      <div class="grid two">
+        <div class="card">
+          <h2>Plan repas type</h2>
+          <div id="meal-plan"></div>
+        </div>
+        <div class="card">
+          <h2>Journal alimentaire</h2>
+          <p id="food-date"></p>
+          <form id="food-form" class="food-form">
+            <input type="text" id="food-name" placeholder="Aliment (ex: Riz blanc cuit)" required />
+            <input type="number" id="food-kcal" placeholder="kcal" min="0" required />
+            <input type="number" id="food-prot" placeholder="prot (g)" min="0" step="0.1" required />
+            <input type="number" id="food-carb" placeholder="glu (g)" min="0" step="0.1" required />
+            <input type="number" id="food-fat" placeholder="lip (g)" min="0" step="0.1" required />
+            <button type="submit" class="primary">Ajouter</button>
+          </form>
+          <ul id="food-log" class="food-log"></ul>
+          <div class="quick-foods">
+            <h3>Ajout rapide</h3>
+            <div id="quick-foods-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress -->
+    <section class="panel" id="progress">
+      <div class="grid two">
+        <div class="card">
+          <h2>Suivi du poids</h2>
+          <form id="weight-form" class="inline-form">
+            <input type="number" id="weight-input" placeholder="Poids (kg)" step="0.1" required />
+            <button type="submit" class="primary">Enregistrer</button>
+          </form>
+          <canvas id="weight-chart" width="600" height="280"></canvas>
+        </div>
+        <div class="card">
+          <h2>Historique des séances</h2>
+          <ul id="session-history" class="history"></ul>
+        </div>
+        <div class="card">
+          <h2>Records personnels (PR)</h2>
+          <ul id="pr-list" class="pr-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section class="panel" id="profile">
+      <div class="card">
+        <h2>Mes informations</h2>
+        <form id="profile-form" class="profile-form">
+          <label>Âge <input type="number" id="age" /></label>
+          <label>Taille (cm) <input type="number" id="height" /></label>
+          <label>Poids (kg) <input type="number" id="weight" step="0.1" /></label>
+          <label>Niveau d'activité
+            <select id="activity">
+              <option value="1.2">Sédentaire</option>
+              <option value="1.375">Léger (1-2 séances/sem)</option>
+              <option value="1.55" selected>Modéré (3-5 séances/sem)</option>
+              <option value="1.725">Intense (6-7 séances/sem)</option>
+            </select>
+          </label>
+          <label>Objectif
+            <select id="goal">
+              <option value="cut">Sèche (-300 kcal)</option>
+              <option value="maintain">Maintien</option>
+              <option value="lean" selected>Prise de masse propre (+300 kcal)</option>
+              <option value="bulk">Prise de masse (+500 kcal)</option>
+            </select>
+          </label>
+          <button type="submit" class="primary">Mettre à jour</button>
+        </form>
+        <div class="card-inset">
+          <h3>Calculs</h3>
+          <p>BMR : <span id="bmr">—</span> kcal</p>
+          <p>TDEE : <span id="tdee">—</span> kcal</p>
+          <p>Apport cible : <span id="target-kcal">—</span> kcal</p>
+        </div>
+        <button id="reset-data" class="danger">Réinitialiser toutes les données</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
